@@ -65,7 +65,7 @@ class Graph extends Component {
               <Tooltip cursor={false} />
               <Legend verticalAlign="top" height={36} />/>
               {this.props.data.columnNames.map((col, i) =>
-                <Line key={col} type="monotone"
+                <Line key={`${this.props.qkey} + ${col}`} type="monotone"
                   dot={false}
                   dataKey={this.state.columns[i]}
                   name={col} stroke={colors[i % colors.length]} />)}
