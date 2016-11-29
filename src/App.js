@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import update from 'immutability-helper';
 import _ from 'lodash'
 import { Brush, CartesianGrid, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 
@@ -20,6 +21,7 @@ class Graph extends Component {
     this.state = {
       rows: [],
       columns: [],
+      enabled: {},
     }
   }
 
@@ -46,10 +48,30 @@ class Graph extends Component {
       .then(data => {
         this.setState({ rows: data.result });
         this.setState({ columns: Object.keys(this.state.rows[0]).slice(2) });
+        // store true for each legend
+        const legendsEnabled = this.state.columns.reduce((obj, elem) => {
+          obj[elem] = true;
+          return obj;
+        }, {});
+        // nest legend within qkey
+        const enabled = { [this.props.qkey]: legendsEnabled };
+        this.setState({ enabled: enabled });
+        console.log(this.state.enabled);
       })
       .catch(error => {
         throw error;
       });
+  }
+  handleClick(i) {
+    console.log(i);
+    console.log(this.state.enabled[this.props.qkey]);
+    this.setState({
+      // Set enabled = false for legend clicked
+      enabled: update(this.state.enabled, {
+        [this.props.qkey]: { [i.dataKey]: { $set: !this.state.enabled[this.props.qkey][i.dataKey] } }
+      })
+    });
+    console.log(this.state.enabled[this.props.qkey]);
   }
 
   render() {
@@ -63,12 +85,24 @@ class Graph extends Component {
               <YAxis label={this.props.data.yAxisTitle} />
               <CartesianGrid strokeDasharray="3 3" />
               <Tooltip cursor={false} />
-              <Legend verticalAlign="top" height={36} />/>
-              {this.props.data.columnNames.map((col, i) =>
-                <Line key={col} type="monotone"
-                  dot={false}
-                  dataKey={this.state.columns[i]}
-                  name={col} stroke={colors[i % colors.length]} />)}
+              <Legend onClick={i => {
+                this.handleClick(i);
+              } } verticalAlign="top" height={36} />
+              {this.props.data.columnNames
+                .filter((col, i) => {
+                  // If qkey exists and legend for qkey is enabled
+                  if (this.state.enabled[this.props.qkey] &&
+                    this.state.enabled[this.props.qkey][this.state.columns[i]]) {
+                    return true;
+                  }
+                  return false;
+                })
+                .map((col, i) =>
+                  // qkey + legend datakey is unique
+                  <Line key={`${this.props.qkey} + ${col}`} type="monotone"
+                    dot={false}
+                    dataKey={this.state.columns[i]}
+                    name={col} stroke={colors[i % colors.length]} />)}
               <Brush dataKey='timing' height={30} stroke="#8884d8" />
             </LineChart>
           </ResponsiveContainer>
