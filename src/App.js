@@ -105,10 +105,11 @@ class Graph extends Component {
               <XAxis dataKey="timing" />
               <YAxis label={this.props.data.yAxisTitle} />
               <CartesianGrid strokeDasharray="3 3" />
-              <Tooltip />
+              <Tooltip cursor={false}/>
               <Legend />
               {this.props.data.columnNames.map((col, i) =>
                 <Line key={col} type="monotone"
+                  dot={false}
                   dataKey={this.state.columns[i]}
                   name={col} stroke={colors[i % colors.length]} />)}
             </LineChart>
