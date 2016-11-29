@@ -45,7 +45,7 @@ class Graph extends Component {
       .then(parseJSON)
       .then(data => {
         this.setState({ rows: data.result });
-        this.setState({ columns: _.without(Object.keys(this.state.rows[0]), ['timing', 'columnsCount']) });
+        this.setState({ columns: Object.keys(this.state.rows[0]).slice(2) });
       })
       .catch(error => {
         throw error;
