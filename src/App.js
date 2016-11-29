@@ -73,6 +73,7 @@ class Graph extends Component {
     });
     console.log(this.state.enabled[this.props.qkey]);
   }
+
   render() {
     if (this.state.columns.length > 0) {
       return (
