@@ -61,7 +61,7 @@ class Graph extends Component {
               <YAxis label={this.props.data.yAxisTitle} />
               <CartesianGrid strokeDasharray="3 3" />
               <Tooltip cursor={false} />
-              <Legend verticalAlign="top" height={36} />/>
+              <Legend verticalAlign="top" height={36} />
               {this.props.data.columnNames.map((col, i) =>
                 <Line key={`${this.props.qkey} + ${col}`} type="monotone"
                   dot={false}
