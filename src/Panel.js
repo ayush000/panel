@@ -51,6 +51,7 @@ class Graph extends Component {
   }
 
   render() {
+
     if (this.state.columns.length > 0) {
       return (
         <div>
@@ -73,6 +74,7 @@ class Graph extends Component {
         </div>
       );
     }
+
     return (
       <div>Loading</div>
     )
@@ -89,6 +91,7 @@ class Panel extends Component {
   }
 
   componentDidMount() {
+    
     const options = {
       method: 'POST',
       headers: {
@@ -113,6 +116,7 @@ class Panel extends Component {
         throw error;
       });
   }
+
   render() {
 
     if (this.state.graphDetails) {
