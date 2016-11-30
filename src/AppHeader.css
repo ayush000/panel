@@ -1,0 +1,25 @@
+.Header {
+  background-color: darkorange;
+  height: 60px;
+  padding: 2px;
+  color: white;
+  
+}
+
+.Header-elements {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+}
+
+.App-logo {
+  /*margin-right: auto;*/
+  /*animation: App-logo-spin infinite 20s linear;*/
+  height: 55px;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
