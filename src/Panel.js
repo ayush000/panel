@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { Brush, CartesianGrid, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import React, { Component } from 'react';
+import moment from 'moment';
 import { checkStatus, parseJSON } from './shared/commonfunction';
 
 const baseUrl = 'https://prod-analytics-in.jugnoo.in:8083';
@@ -16,6 +17,7 @@ class Graph extends Component {
   constructor() {
     super();
     this.state = {
+      allRows: [],
       rows: [],
       columns: [],
     }
@@ -42,12 +44,23 @@ class Graph extends Component {
       .then(checkStatus)
       .then(parseJSON)
       .then(data => {
-        this.setState({ rows: data.result });
+        this.setState({ allRows: data.result });
+        let range = moment().range(moment(this.props.from_date), moment(this.props.to_date));
+        let rows = data.result.filter(row => range.contains(moment(row.timing)));
+        this.setState({ rows: rows });
         this.setState({ columns: Object.keys(this.state.rows[0]).slice(2) });
       })
       .catch(error => {
         throw error;
       });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.from_date !== nextProps.from_date || this.props.to_date !== nextProps.to_date) {
+      let range = moment().range(moment(nextProps.from_date), moment(nextProps.to_date));
+      let rows = this.state.allRows.filter(row => range.contains(moment(row.timing)));
+      this.setState({ rows: rows });
+    }
   }
 
   render() {
@@ -91,7 +104,8 @@ class Panel extends Component {
   }
 
   componentDidMount() {
-    
+
+
     const options = {
       method: 'POST',
       headers: {
@@ -108,7 +122,6 @@ class Panel extends Component {
       .then(checkStatus)
       .then(parseJSON)
       .then(data => {
-        // console.log(data.graphData.godJson);
         this.setState({ graphDetails: _.pick(data.graphData.godJson, ['BurnPerRideGraph', 'DemandQualityData']) });
         // this.setState({ graphDetails: data.graphData.godJson });
       })
@@ -123,7 +136,8 @@ class Panel extends Component {
       return (<div>
         {Object.keys(this.state.graphDetails)
           .map((qkey) =>
-            <Graph key={qkey} qkey={qkey} data={this.state.graphDetails[qkey]} />
+            <Graph key={qkey} qkey={qkey} data={this.state.graphDetails[qkey]}
+              from_date={this.props.from_date} to_date={this.props.to_date} />
           )}
       </div>);
 
