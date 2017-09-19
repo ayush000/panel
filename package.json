@@ -4,7 +4,7 @@
   "private": true,
   "devDependencies": {
     "babel-plugin-recharts": "^1.0.2",
-    "react-scripts": "0.7.0"
+    "react-scripts": "1.0.13"
   },
   "dependencies": {
     "antd": "^2.5.0",
@@ -12,9 +12,9 @@
     "lodash": "^4.17.2",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
-    "react-vis": "^0.6.7",
-    "recharts": "^0.19.0",
-    "victory": "^0.13.7"
+    "react-vis": "^1.7.7",
+    "recharts": "^0.22.4",
+    "victory": "^0.22.2"
   },
   "scripts": {
     "start": "react-scripts start",
